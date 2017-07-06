@@ -8,28 +8,35 @@
 let first=true;
 let firsto=true;
 if(first){
-setTimeout(glowna, 2000);
+setTimeout(glowna, 800);
 }
 function glowna(){
   first=false;
 var newo=false;
-
+let checko=true;
 let lol=document.getElementById('guide-channels');
 
 let element=null;
 let tag=null;
 if (lol == null && document.querySelector('.style-scope ytd-guide-renderer #container') == null){
   console.log("DZIALA TERMINATOR");
+  firsto=true;
+  checko=false;
   let termi=document.getElementById("guide-button");
   termi.addEventListener('click',()=>{
     console.log("KLIK");
     console.log("Stan peirwszego: ");
-    console.log(first);
+    console.log(firsto);
     if(firsto){
       console.log("ODPALAM JESZCZE RAZ");
     glowna();
+    console.log("Stan checko");
+    console.log(checko);
+    if(checko){
+      firsto=false;
+      checko=true;
+    }
 
-    firsto=false;
   }
   });
 }else{
