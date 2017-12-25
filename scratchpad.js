@@ -20,7 +20,7 @@ let lol=document.querySelector('#guide-renderer #sections');
 let element=null;
 let tag=null;
 if ( document.querySelector('#guide-renderer #sections')== null || document.querySelector('#guide-renderer #sections').childNodes[2] == undefined){
-  
+
 while( document.querySelector('#guide-renderer #sections')== null || document.querySelector('#guide-renderer #sections').childNodes[2] == undefined ){
   await sleep(500);
 
@@ -29,7 +29,9 @@ while( document.querySelector('#guide-renderer #sections')== null || document.qu
 
 }
 if(document.querySelector('#guide-renderer #sections') != null){
-
+  let expand=document.querySelectorAll('#expander-item')[1];
+  expand.click();
+  console.log(expand);
   lol=document.querySelector('#guide-renderer #sections');
 
   lol=lol.childNodes[2];
@@ -81,7 +83,7 @@ inp.addEventListener('keyup',()=>{
   let licznik=0;
 
   for(let n=0;n<sub.length;n++){
-   
+
       if(sub[n].querySelector("ytd-guide-entry-renderer  a").innerText.toLowerCase().includes(val)){
         sub[n].style.display='block';
         licznik--;
@@ -89,11 +91,11 @@ inp.addEventListener('keyup',()=>{
         sub[n].style.display='none';
         licznik++;
       }
-    
 
- 
 
-  
+
+
+
 
   }
 });
