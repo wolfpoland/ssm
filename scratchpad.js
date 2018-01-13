@@ -29,9 +29,17 @@ while( document.querySelector('#guide-renderer #sections')== null || document.qu
 
 }
 if(document.querySelector('#guide-renderer #sections') != null){
-  let expand=document.querySelectorAll('#expander-item')[1];
-  expand.click();
-  expand.setAttribute('style','display: none;');
+  let expand=document.querySelectorAll('#expander-item');
+  if(expand.length > 1){
+    let tmp=expand[1];
+    tmp.click();
+    tmp.setAttribute('style','display: none;');
+  }else if(expand.length == 1){
+    let tmp=expand[0];
+    tmp.click();
+    tmp.setAttribute('style','display: none;');
+  }
+
   lol=document.querySelector('#guide-renderer #sections');
 
   lol=lol.childNodes[2];
