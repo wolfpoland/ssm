@@ -33,11 +33,15 @@ if(document.querySelector('#guide-renderer #sections') != null){
   if(expand.length > 1){
     let tmp=expand[1];
     tmp.click();
-    tmp.setAttribute('style','display: none;');
+    tmp.setAttribute('style',`
+             display: none;
+    `);
   }else if(expand.length == 1){
     let tmp=expand[0];
     tmp.click();
-    tmp.setAttribute('style','display: none;');
+    tmp.setAttribute('style',`
+             display: none;
+    `);
   }
 
   lol=document.querySelector('#guide-renderer #sections');
@@ -48,11 +52,10 @@ if(document.querySelector('#guide-renderer #sections') != null){
 
  element=document.createElement("div");
  element.setAttribute('style',`
-          position: relative;
           width: 100%;
-          margin-right: 16%;
-          margin-left: 6%;
-          margin-bottom: 8%;
+          padding: 0 24px;
+          box-sizing: border-box;
+          align-items: center;
       `);
 
 
@@ -80,11 +83,32 @@ let inp=document.createElement("input");
 inp.setAttribute('type','text');
 inp.setAttribute('placeholder','Search');
 
-inp.setAttribute('style','font-family: "Roboto", "Droid Sans", sans-serif;width:100%;font-size: 16px;margin: 0;padding: 8px 8px 6px 8px;position: relative;display: block;outline: none;border: none;background: none;color: #212121;border-bottom: 1px solid #e0e0e0; border-radius: 0;');
+inp.setAttribute('style',`
+  font-family: "Roboto", "Droid Sans", sans-serif;
+  width:90%;
+  font-size: 16px;
+  margin: 0;
+  padding: 8px 8px 6px 8px;
+  position: relative;
+  display: block;
+  outline: none;
+  border: none;
+  background: none;
+  color: var(--yt-primary-color);
+  border-bottom: 1px solid #e0e0e0;
+  border-radius: 0;
+ `);
 let span=document.createElement("span");
-span.setAttribute('style',"position: absolute;  left: 50%; width: 0; height: 2px; background-color: #3399FF; transition: 0.4s;")
-element.append(inp);
-element.append(span);
+span.setAttribute('style',"position: absolute;  left: 50%; width: 0; height: 2px; background-color: #3399FF; transition: 0.4s;");
+let posredni=document.createElement('div');
+posredni.setAttribute('style',`
+  width: 100%;
+  position: relative;
+  margin-bottom: 14px;
+`);
+posredni.append(inp);
+posredni.append(span);
+element.append(posredni);
 let sub=lol.getElementsByTagName("li");
 if (sub.length == 0){
 
