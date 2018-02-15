@@ -12,7 +12,7 @@ function sleep(ms){
 glowna();
 
 async function glowna(){
-  first=false;
+
 var newo=false;
 let checko=true;
 let lol=document.querySelector('#guide-renderer #sections');
@@ -29,7 +29,8 @@ while( document.querySelector('#guide-renderer #sections')== null || document.qu
 
 }
 if(document.querySelector('#guide-renderer #sections') != null){
-  let expand=document.querySelectorAll('#expander-item');
+ /* let expand=document.querySelectorAll('#expander-item');
+  console.log(expand);
   if(expand.length > 1){
     let tmp=expand[1];
     tmp.click();
@@ -43,7 +44,7 @@ if(document.querySelector('#guide-renderer #sections') != null){
              display: none;
     `);
   }
-
+*/
   lol=document.querySelector('#guide-renderer #sections');
 
   lol=lol.childNodes[2];
