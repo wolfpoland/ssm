@@ -29,28 +29,35 @@ while( document.querySelector('#guide-renderer #sections')== null || document.qu
 
 }
 if(document.querySelector('#guide-renderer #sections') != null){
- /* let expand=document.querySelectorAll('#expander-item');
-  console.log(expand);
-  if(expand.length > 1){
-    let tmp=expand[1];
-    tmp.click();
-    tmp.setAttribute('style',`
-             display: none;
-    `);
-  }else if(expand.length == 1){
-    let tmp=expand[0];
-    tmp.click();
-    tmp.setAttribute('style',`
-             display: none;
-    `);
-  }
-*/
+  // //const expand=document.querySelectorAll('#expander-item');
+  // const deleteo=document.querySelector('#expander-item a[title="history"]');
+  // console.log(expand)
+  // console.log(deleteo);
+  // if(expand.length > 1){
+  //   let tmp=expand[1];
+  //   tmp.click();
+  //   tmp.setAttribute('style',`
+  //            display: none;
+  //   `);
+  // }else if(expand.length == 1){
+  //   let tmp=expand[0];
+  //   tmp.click();
+  //   tmp.setAttribute('style',`
+  //            display: none;
+  //   `);
+  // }
+
   lol=document.querySelector('#guide-renderer #sections');
 
   lol=lol.childNodes[2];
   lol=lol.childNodes[5];
-
-
+  const expand=lol.querySelector('#expander-item');
+  if(expand){
+    expand.click();
+    expand.setAttribute('style',`
+             display: none;
+    `);
+  }
  element=document.createElement("div");
  element.setAttribute('style',`
           width: 100%;
@@ -61,22 +68,22 @@ if(document.querySelector('#guide-renderer #sections') != null){
 
 
 }
-else if (lol == null){
+// else if (lol == null){
+//   console.log("Zaszedl ELSE IF");
+//   tag=document.createElement("p");
+//     tag.appendChild(document.createTextNode("Search"));
+//    element=document.createElement("div");
+//    element.appendChild(tag);
+//   lol=document.querySelector('.style-scope ytd-guide-renderer #container');
+//   element.style.margin='0 10%';
+//   newo=true;
 
-  tag=document.createElement("p");
-    tag.appendChild(document.createTextNode("Search"));
-   element=document.createElement("div");
-   element.appendChild(tag);
-  lol=document.querySelector('.style-scope ytd-guide-renderer #container');
-  element.style.margin='0 10%';
-  newo=true;
 
+// }else{
 
-}else{
-
-  element=document.createElement("li");
-  element.appendChild(document.createTextNode("Search"));
-}
+//   element=document.createElement("li");
+//   element.appendChild(document.createTextNode("Search"));
+// }
 
 
 lol.parentNode.insertBefore(element,lol);
