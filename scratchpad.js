@@ -1,102 +1,42 @@
-// ==UserScript==
-// @name        dodatki
-// @namespace   tuba
-// @include     https://www.youtube.com/?hl=pl&gl=PL&app=desktop
-// @version     1
-// @grant       none
-// ==/UserScript==
-function sleep(ms) {
-  return new Promise(res => setTimeout(res, ms));
-}
+import { v4 } from 'node-uuid';
+import debounce from 'lodash.debounce';
 
-glowna();
+const expandAndHideExpander = targetSection => {
+  const expanderItem = targetSection.querySelector('#expander-item');
 
-async function glowna() {
-  var newo = false;
-  let checko = true;
-  let lol = document.querySelector('#guide-renderer #sections');
-
-  let element = null;
-  let tag = null;
-  if (
-    document.querySelector('#guide-renderer #sections') == null ||
-    document.querySelector('#guide-renderer #sections').childNodes[2] ==
-      undefined
-  ) {
-    while (
-      document.querySelector('#guide-renderer #sections') == null ||
-      document.querySelector('#guide-renderer #sections').childNodes[2] ==
-        undefined
-    ) {
-      await sleep(500);
-    }
+  if (!!expanderItem) {
+    expanderItem.click();
+    expanderItem.setAttribute('style', 'display: none;');
   }
-  if (document.querySelector('#guide-renderer #sections') != null) {
-    // //const expand=document.querySelectorAll('#expander-item');
-    // const deleteo=document.querySelector('#expander-item a[title="history"]');
-    // console.log(expand)
-    // console.log(deleteo);
-    // if(expand.length > 1){
-    //   let tmp=expand[1];
-    //   tmp.click();
-    //   tmp.setAttribute('style',`
-    //            display: none;
-    //   `);
-    // }else if(expand.length == 1){
-    //   let tmp=expand[0];
-    //   tmp.click();
-    //   tmp.setAttribute('style',`
-    //            display: none;
-    //   `);
-    // }
+};
 
-    lol = document.querySelector('#guide-renderer #sections');
-
-    lol = lol.childNodes[2];
-
-    const expand = lol.querySelector('#expander-item');
-    if (expand) {
-      expand.click();
-      expand.setAttribute(
-        'style',
-        `
-             display: none;
+const getContainerElement = targetSection => {
+  const containerElement = document.createElement('div');
+  containerElement.setAttribute(
+    'style',
+    `   width: 100%;
+        display: flex;
+        justify-content: center;
+        padding: 0 24px;
+        box-sizing: border-box;
+        align-items: center;
     `
-      );
-    }
-    element = document.createElement('div');
-    element.setAttribute(
-      'style',
-      `
-          width: 100%;
-          padding: 0 24px;
-          box-sizing: border-box;
-          align-items: center;
-      `
-    );
-  }
-  // else if (lol == null){
-  //   console.log("Zaszedl ELSE IF");
-  //   tag=document.createElement("p");
-  //     tag.appendChild(document.createTextNode("Search"));
-  //    element=document.createElement("div");
-  //    element.appendChild(tag);
-  //   lol=document.querySelector('.style-scope ytd-guide-renderer #container');
-  //   element.style.margin='0 10%';
-  //   newo=true;
+  );
 
-  // }else{
+  const containerLocation = targetSection.querySelector('h3');
+  containerLocation.parentNode.insertBefore(
+    containerElement,
+    containerLocation
+  );
 
-  //   element=document.createElement("li");
-  //   element.appendChild(document.createTextNode("Search"));
-  // }
+  return containerElement;
+};
 
-  lol.parentNode.insertBefore(element, lol);
-  let inp = document.createElement('input');
-  inp.setAttribute('type', 'text');
-  inp.setAttribute('placeholder', 'Search');
-
-  inp.setAttribute(
+const getInputWithSpan = () => {
+  const input = document.createElement('input');
+  input.setAttribute('type', 'text');
+  input.setAttribute('placeholder', 'Search');
+  input.setAttribute(
     'style',
     `
   font-family: "Roboto", "Droid Sans", sans-serif;
@@ -114,13 +54,22 @@ async function glowna() {
   border-radius: 0;
  `
   );
-  let span = document.createElement('span');
+
+  const span = document.createElement('span');
   span.setAttribute(
     'style',
     'position: absolute;  left: 50%; width: 0; height: 2px; background-color: #3399FF; transition: 0.4s;'
   );
-  let posredni = document.createElement('div');
-  posredni.setAttribute(
+
+  return {
+    input,
+    span
+  };
+};
+
+const getWrapperElement = () => {
+  const wrapperElement = document.createElement('div');
+  wrapperElement.setAttribute(
     'style',
     `
   width: 100%;
@@ -128,15 +77,53 @@ async function glowna() {
   margin-bottom: 14px;
 `
   );
-  posredni.append(inp);
-  posredni.append(span);
-  element.append(posredni);
-  let sub = lol.getElementsByTagName('li');
-  if (sub.length == 0) {
-    sub = lol.getElementsByTagName('ytd-guide-entry-renderer');
-  } else {
-  }
-  inp.addEventListener('focus', () => {
+
+  return wrapperElement;
+};
+
+const assemblyInputElement = targetSection => {
+  const containerElement = getContainerElement(targetSection);
+  const wrapperElement = getWrapperElement();
+  const inputWithSpan = getInputWithSpan();
+
+  const { input, span } = inputWithSpan;
+
+  wrapperElement.append(input);
+  wrapperElement.append(span);
+  containerElement.append(wrapperElement);
+
+  return inputWithSpan;
+};
+
+const collectSubscribtions = targetSection => {
+  const elements = targetSection.getElementsByTagName(
+    'ytd-guide-entry-renderer'
+  );
+
+  return [].slice.call(elements).map(element => {
+    const id = v4();
+    element.setAttribute('id', id);
+    return {
+      text: element.childNodes[1].innerText.trim().toLowerCase(),
+      id
+    };
+  });
+};
+
+const searchLogic = (subs, input) => {
+    subs.forEach(elm => {
+      if (elm.text.indexOf(input.value) === -1) {
+        document.getElementById(elm.id).style.display = 'none';
+      }else{
+        document.getElementById(elm.id).style.display = 'block';
+      }
+    })
+  
+};
+
+const addInputListeners = (inputWitSpan, subs) => {
+  const { input, span } = inputWitSpan;
+  input.addEventListener('focus', () => {
     span.setAttribute(
       'style',
       `position: absolute;
@@ -147,29 +134,34 @@ async function glowna() {
         left: 0;`
     );
   });
-  inp.addEventListener('focusout', () => {
+  input.addEventListener('focusout', () => {
     span.setAttribute(
       'style',
       'position: absolute;  left: 50%; width: 0; height: 2px; background-color: #3399FF; transition: 0.4s;'
     );
   });
-  inp.addEventListener('keyup', () => {
-    let val = inp.value.toLowerCase();
-    let licznik = 0;
+  input.addEventListener(
+    'keyup',
+    debounce(searchLogic.bind(this, subs, input), 100)
+  );
+};
 
-    for (let n = 0; n < sub.length; n++) {
-      if (
-        sub[n]
-          .querySelector('ytd-guide-entry-renderer  a')
-          .innerText.toLowerCase()
-          .includes(val)
-      ) {
-        sub[n].style.display = 'block';
-        licznik--;
-      } else {
-        sub[n].style.display = 'none';
-        licznik++;
-      }
+const programLoop = setInterval(() => {
+  const targetSection = document.querySelector('#guide-renderer #sections')
+    .childNodes[1];
+  if (!!targetSection) {
+    try {
+      expandAndHideExpander(targetSection);
+      const subs = collectSubscribtions(targetSection);
+      const inputWitSpan = assemblyInputElement(targetSection);
+      addInputListeners(inputWitSpan, subs);
+      clearInterval(programLoop);
+    } catch (err) {
+      console.log(
+        '[Simple Subscription Managment] Error, please raport it!: \n',
+        err
+      );
+      clearInterval(programLoop);
     }
-  });
-}
+  }
+}, 500);
