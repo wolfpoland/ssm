@@ -23,6 +23,7 @@
   "dependencies": {
     "babel-eslint": "^8.2.1",
     "eslint": "^4.17.0",
+    "fast-memoize": "^2.5.1",
     "lodash.debounce": "^4.0.8",
     "node-uuid": "^1.4.8",
     "webpack": "^3.10.0"

@@ -1,5 +1,6 @@
 import { v4 } from 'node-uuid';
 import debounce from 'lodash.debounce';
+import memomize from 'fast-memoize';
 
 const expandAndHideExpander = targetSection => {
   const expanderItem = targetSection.querySelector('#expander-item');
@@ -110,15 +111,29 @@ const collectSubscribtions = targetSection => {
   });
 };
 
+const hideOrNot = (value, subs) => {
+  const toDisplay = [];
+  const toHide = [];
+  subs.forEach(elm => {
+    if (elm.text.indexOf(value) === -1) {
+      toHide.push(document.getElementById(elm.id));
+    } else {
+      toDisplay.push(document.getElementById(elm.id));
+    }
+  });
+
+  return {
+    toDisplay,
+    toHide
+  }
+};
+
 const searchLogic = (subs, input) => {
-    subs.forEach(elm => {
-      if (elm.text.indexOf(input.value) === -1) {
-        document.getElementById(elm.id).style.display = 'none';
-      }else{
-        document.getElementById(elm.id).style.display = 'block';
-      }
-    })
-  
+ const mHideOrNot = memomize(hideOrNot);
+ const {toDisplay, toHide} = mHideOrNot(input.value, subs);
+
+ toDisplay.forEach(elm => elm.style.display = 'block');
+ toHide.forEach(elm => elm.style.display = 'none')
 };
 
 const addInputListeners = (inputWitSpan, subs) => {
