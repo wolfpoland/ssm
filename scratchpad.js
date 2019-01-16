@@ -125,15 +125,18 @@ const hideOrNot = (value, subs) => {
   return {
     toDisplay,
     toHide
-  }
+  };
 };
 
 const searchLogic = (subs, input) => {
- const mHideOrNot = memomize(hideOrNot);
- const {toDisplay, toHide} = mHideOrNot(input.value, subs);
+  const mHideOrNot = memomize(hideOrNot);
+  const { toDisplay, toHide } = mHideOrNot(
+    input.value.trim().toLowerCase(),
+    subs
+  );
 
- toDisplay.forEach(elm => elm.style.display = 'block');
- toHide.forEach(elm => elm.style.display = 'none')
+  toDisplay.forEach(elm => (elm.style.display = 'block'));
+  toHide.forEach(elm => (elm.style.display = 'none'));
 };
 
 const addInputListeners = (inputWitSpan, subs) => {
@@ -161,22 +164,40 @@ const addInputListeners = (inputWitSpan, subs) => {
   );
 };
 
-const programLoop = setInterval(() => {
-  const targetSection = document.querySelector('#guide-renderer #sections')
-    .childNodes[1];
-  if (!!targetSection) {
-    try {
-      expandAndHideExpander(targetSection);
-      const subs = collectSubscribtions(targetSection);
-      const inputWitSpan = assemblyInputElement(targetSection);
-      addInputListeners(inputWitSpan, subs);
-      clearInterval(programLoop);
-    } catch (err) {
-      console.log(
-        '[Simple Subscription Managment] Error, please raport it!: \n',
-        err
-      );
-      clearInterval(programLoop);
-    }
+const predicteSectionsPlacment = chileNodes => {
+  if (chileNodes.length - 1 < 4) {
+    return 1;
+  } else {
+    return 2;
   }
+};
+
+const programLoop = setInterval(() => {
+  try {
+    const guidesChildNodes = document.querySelector(
+      '#guide-renderer #sections'
+    );
+    if (!!guidesChildNodes) {
+      const targetSection =
+        guidesChildNodes.childNodes[
+          predicteSectionsPlacment(guidesChildNodes.childNodes)
+        ];
+
+      if (!!targetSection) {
+        try {
+          expandAndHideExpander(targetSection);
+          const subs = collectSubscribtions(targetSection);
+          const inputWitSpan = assemblyInputElement(targetSection);
+          addInputListeners(inputWitSpan, subs);
+          clearInterval(programLoop);
+        } catch (err) {
+          console.log(
+            '[Simple Subscription Managment] Error, please raport it!: \n',
+            err
+          );
+          clearInterval(programLoop);
+        }
+      }
+    }
+  } catch (err) {}
 }, 500);
