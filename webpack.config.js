@@ -2,7 +2,7 @@ const path = require('path');
 const MinifyPlugin = require('babel-minify-webpack-plugin');
 
 module.exports = {
-  entry: './scratchpad.js',
+  entry: './index.js',
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: 'bundle.js',

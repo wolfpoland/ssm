@@ -50,7 +50,7 @@ const getInputWithSpan = () => {
   outline: none;
   border: none;
   background: none;
-  color: var(--yt-primary-color);
+  color: var(--yt-spec-text-primary);
   border-bottom: 1px solid #e0e0e0;
   border-radius: 0;
  `
@@ -96,7 +96,7 @@ const assemblyInputElement = targetSection => {
   return inputWithSpan;
 };
 
-const collectSubscribtions = targetSection => {
+const collectSubscriptions = targetSection => {
   const elements = targetSection.getElementsByTagName(
     'ytd-guide-entry-renderer'
   );
@@ -104,8 +104,9 @@ const collectSubscribtions = targetSection => {
   return [].slice.call(elements).map(element => {
     const id = v4();
     element.setAttribute('id', id);
+
     return {
-      text: element.childNodes[1].innerText.trim().toLowerCase(),
+      text: element.childNodes[2].innerText.trim().toLowerCase(),
       id
     };
   });
@@ -164,12 +165,8 @@ const addInputListeners = (inputWitSpan, subs) => {
   );
 };
 
-const predicteSectionsPlacment = chileNodes => {
-  if (chileNodes.length - 1 < 4) {
-    return 1;
-  } else {
-    return 2;
-  }
+const predilectionsPlacement = chileNodes => {
+  return 1;
 };
 
 const programLoop = setInterval(() => {
@@ -177,22 +174,23 @@ const programLoop = setInterval(() => {
     const guidesChildNodes = document.querySelector(
       '#guide-renderer #sections'
     );
+
     if (!!guidesChildNodes) {
       const targetSection =
         guidesChildNodes.childNodes[
-          predicteSectionsPlacment(guidesChildNodes.childNodes)
+          predilectionsPlacement(guidesChildNodes.childNodes)
         ];
 
       if (!!targetSection) {
         try {
           expandAndHideExpander(targetSection);
-          const subs = collectSubscribtions(targetSection);
+          const subs = collectSubscriptions(targetSection);
           const inputWitSpan = assemblyInputElement(targetSection);
           addInputListeners(inputWitSpan, subs);
           clearInterval(programLoop);
         } catch (err) {
           console.log(
-            '[Simple Subscription Managment] Error, please raport it!: \n',
+            '[Simple Subscription Management] Error, please report it!: \n',
             err
           );
           clearInterval(programLoop);
